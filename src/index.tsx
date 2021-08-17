@@ -1,3 +1,4 @@
+/* eslint-disable no-proto */
 ('use strict');
 import { NativeModules, DeviceEventEmitter, Platform } from 'react-native';
 import { EventEmitter } from 'events';
@@ -16,11 +17,13 @@ DeviceEventEmitter.addListener('WeChat_Resp', (resp) => {
   emitter.emit(resp.type, resp);
 });
 
-function wrapRegisterApp(nativeFunc) {
+function wrapRegisterApp(nativeFunc: {
+  apply: (arg0: null, arg1: any[]) => void;
+}) {
   if (!nativeFunc) {
     return undefined;
   }
-  return (...args) => {
+  return (...args: any) => {
     if (isAppRegistered) {
       // FIXME(Yorkie): we ignore this error if AppRegistered is true.
       return Promise.resolve(true);
@@ -29,7 +32,7 @@ function wrapRegisterApp(nativeFunc) {
     return new Promise((resolve, reject) => {
       nativeFunc.apply(null, [
         ...args,
-        (error, result) => {
+        (error: string | undefined, result: unknown) => {
           if (!error) {
             return resolve(result);
           }
@@ -43,18 +46,18 @@ function wrapRegisterApp(nativeFunc) {
   };
 }
 
-function wrapApi(nativeFunc) {
+function wrapApi(nativeFunc: any) {
   if (!nativeFunc) {
     return undefined;
   }
-  return (...args) => {
+  return (...args: any[]) => {
     if (!isAppRegistered) {
       return Promise.reject(new Error('registerApp required.'));
     }
     return new Promise((resolve, reject) => {
       nativeFunc.apply(null, [
         ...args,
-        (error, result) => {
+        (error: any, result: any) => {
           if (!error) {
             return resolve(result);
           }
@@ -147,14 +150,14 @@ export const openWXApp = wrapApi(WeChat.openWXApp);
 const nativeShareToTimeline = wrapApi(WeChat.shareToTimeline);
 const nativeShareToSession = wrapApi(WeChat.shareToSession);
 const nativeShareToFavorite = wrapApi(WeChat.shareToFavorite);
-const nativeSendAuthRequest = wrapApi(WeChat.sendAuthRequest);
+// const nativeSendAuthRequest = wrapApi(WeChat.sendAuthRequest);
 
 /**
  * @method sendAuthRequest
  * @param {Array} scopes - the scopes for authentication.
  * @return {Promise}
  */
-export function sendAuthRequest(scopes, state) {
+export function sendAuthRequest(scopes: any, state: any) {
   return new Promise((resolve, reject) => {
     WeChat.sendAuthRequest(scopes, state, () => {});
     emitter.once('SendAuth.Resp', (resp) => {
@@ -180,9 +183,9 @@ export function sendAuthRequest(scopes, state) {
  * @param {String} data.filePath - Provide a local file if type equals file.
  * @param {String} data.fileExtension - Provide the file type if type equals file.
  */
-export function shareToTimeline(data) {
+export function shareToTimeline(data: any) {
   return new Promise((resolve, reject) => {
-    nativeShareToTimeline(data);
+    nativeShareToTimeline && nativeShareToTimeline(data);
     emitter.once('SendMessageToWX.Resp', (resp) => {
       if (resp.errCode === 0) {
         resolve(resp);
@@ -206,9 +209,9 @@ export function shareToTimeline(data) {
  * @param {String} data.filePath - Provide a local file if type equals file.
  * @param {String} data.fileExtension - Provide the file type if type equals file.
  */
-export function shareToSession(data) {
+export function shareToSession(data: any) {
   return new Promise((resolve, reject) => {
-    nativeShareToSession(data);
+    nativeShareToSession && nativeShareToSession(data);
     emitter.once('SendMessageToWX.Resp', (resp) => {
       if (resp.errCode === 0) {
         resolve(resp);
@@ -232,9 +235,9 @@ export function shareToSession(data) {
  * @param {String} data.filePath - Provide a local file if type equals file.
  * @param {String} data.fileExtension - Provide the file type if type equals file.
  */
-export function shareToFavorite(data) {
+export function shareToFavorite(data: any) {
   return new Promise((resolve, reject) => {
-    nativeShareToFavorite(data);
+    nativeShareToFavorite && nativeShareToFavorite(data);
     emitter.once('SendMessageToWX.Resp', (resp) => {
       if (resp.errCode === 0) {
         resolve(resp);
@@ -256,11 +259,11 @@ export function shareToFavorite(data) {
  * @param {String} data.sign
  * @returns {Promise}
  */
-export function pay(data) {
+export function pay(data: { [x: string]: any; timeStamp: string }) {
   // FIXME(Yorkie): see https://github.com/yorkie/react-native-wechat/issues/203
   // Here the server-side returns params in lowercase, but here SDK requires timeStamp
   // for compatibility, we make this correction for users.
-  function correct(actual, fixed) {
+  function correct(actual: string, fixed: string) {
     if (!data[fixed] && data[actual]) {
       data[fixed] = data[actual];
       delete data[actual];
@@ -276,7 +279,7 @@ export function pay(data) {
   if (Platform.OS === 'android') data.timeStamp = String(data.timeStamp);
 
   return new Promise((resolve, reject) => {
-    WeChat.pay(data, (result) => {
+    WeChat.pay(data, (result: any) => {
       if (result) reject(result);
     });
     emitter.once('PayReq.Resp', (resp) => {
@@ -293,7 +296,8 @@ export function pay(data) {
  * promises will reject with this error when API call finish with an errCode other than zero.
  */
 export class WechatError extends Error {
-  constructor(resp) {
+  code: { toString: () => any };
+  constructor(resp: { errStr: any; errCode: { toString: () => any } }) {
     const message = resp.errStr || resp.errCode.toString();
     super(message);
     this.name = 'WechatError';
@@ -303,8 +307,6 @@ export class WechatError extends Error {
     // https://github.com/babel/babel/issues/3083
     if (typeof Object.setPrototypeOf === 'function') {
       Object.setPrototypeOf(this, WechatError.prototype);
-    } else {
-      this.__proto__ = WechatError.prototype;
     }
   }
 }
