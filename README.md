@@ -1,6 +1,7 @@
 # react-native-wechat-ts
 
 react native lib for wechat app
+react-native 微信支付-微信分享-微信登录lib
 
 ## Installation
 
@@ -13,14 +14,12 @@ npm install react-native-wechat-ts
 ```js
 import WechatTs from "react-native-wechat-ts";
 
-// ...
+// ...测试
 
 const result = await WechatTs.multiply(3, 7);
+
+
 ```
-
-## Contributing
-
-See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
 
 ## License
 
