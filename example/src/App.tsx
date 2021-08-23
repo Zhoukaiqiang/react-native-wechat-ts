@@ -3,7 +3,7 @@ import * as React from 'react';
 import { StyleSheet, View, Text, Button } from 'react-native';
 import WechatTs from 'react-native-wechat-ts';
 
-WechatTs.registerApp('wx12345678');
+WechatTs.registerApp('wx1234576900');
 export default function App() {
   const [result, setResult] = React.useState<number | undefined>();
   let install = React.useRef<boolean>(false);
@@ -28,12 +28,12 @@ export default function App() {
 
   const pay = () => {
     WechatTs.pay({
-      partnerId: 'kajslkrjqlwke',
-      timeStamp: 'alksjdaklsd',
+      partnerId: '123',
+      timeStamp: '123',
       packageValue: 'Sign=WXPay',
-      sign: 'asdasdasd',
-      nonceStr: 'asdasd',
-      prepayId: 'asdasdasd',
+      sign: '14123',
+      nonceStr: 'eqwe',
+      prepayId: 'adasd',
     })
       .then((res) => {
         console.log(res);
