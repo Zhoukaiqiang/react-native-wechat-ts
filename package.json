@@ -1,6 +1,6 @@
 {
   "name": "react-native-wechat-ts",
-  "version": "0.1.0",
+  "version": "0.1.5",
   "description": "react native lib for wechat app",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -10,6 +10,7 @@
   "files": [
     "src",
     "lib",
+    "index.d.ts",
     "!**/__tests__",
     "!**/__fixtures__",
     "!**/__mocks__",
