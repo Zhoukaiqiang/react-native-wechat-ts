@@ -19,11 +19,12 @@ export default function App() {
     await WechatTs.openWXApp();
   };
   const auth = async () => {
-    WechatTs.sendAuthRequest('snsapi_userinfo', 'wechat_sdk_demo_test').then(
-      (res: any) => {
-        console.log(res);
-      }
+    const res = await WechatTs.sendAuthRequest(
+      'snsapi_userinfo',
+      'wechat_sdk_demo_test'
     );
+
+    console.log(res);
   };
 
   const pay = () => {

@@ -47,9 +47,10 @@ public class WechatTsModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void registerApp(String appid, Promise promise) {
     this.appId = appid;
-    api = WXAPIFactory.createWXAPI(this.getReactApplicationContext().getBaseContext(),appId,true);
+    api = WXAPIFactory.createWXAPI(this.getReactApplicationContext().getBaseContext(),appId,false);
     promise.resolve(api.registerApp(appid));
   }
+  public static native boolean nativeRegisterApp(String appId, Promise promise);
 
   @ReactMethod
   public void isWXAppInstalled(Promise promise) {
@@ -60,6 +61,7 @@ public class WechatTsModule extends ReactContextBaseJavaModule {
     promise.resolve(api.isWXAppInstalled());
   }
 
+  public static native Promise nativeIsWXAppInstalled(Promise promise);
 
   @ReactMethod
   public void getApiVersion(Promise promise) {
@@ -69,6 +71,7 @@ public class WechatTsModule extends ReactContextBaseJavaModule {
     }
     promise.resolve(api.getWXAppSupportAPI());
   }
+  public static native Promise nativeGetApiVersion(Promise promise);
 
   @ReactMethod
   public void openWXApp(Promise promise) {
@@ -78,6 +81,8 @@ public class WechatTsModule extends ReactContextBaseJavaModule {
     }
     promise.resolve(api.openWXApp());
   }
+
+  public static native Promise nativeOpenWXApp(Promise promise);
 
   @ReactMethod
   public void sendAuthRequest(String scope, String state, Promise promise) {
@@ -91,6 +96,7 @@ public class WechatTsModule extends ReactContextBaseJavaModule {
     promise.resolve(api.sendReq(req));
   }
 
+  public static native Promise nativeSendAuthRequest(String scope, String state, Promise promise);
 /*
   @ReactMethod
   public void shareToTimeline(ReadableMap data, Promise promise) {
@@ -147,6 +153,7 @@ public class WechatTsModule extends ReactContextBaseJavaModule {
     payReq.appId = appId;
     promise.resolve(api.sendReq(payReq));
   }
+  public static native Promise nativePay(ReadableMap data, Promise promise);
 //
 //  private void _share(final int scene, final ReadableMap data, final Promise promise) {
 //    Uri uri = null;

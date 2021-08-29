@@ -1,4 +1,5 @@
 {
   "name": "WechatTsExample",
-  "displayName": "WechatTs Example"
+  "displayName": "WechatTs Example",
+  "package": "com.a169kai.tiansui"
 }
