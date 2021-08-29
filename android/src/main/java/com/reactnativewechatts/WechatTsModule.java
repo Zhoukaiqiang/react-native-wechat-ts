@@ -47,7 +47,7 @@ public class WechatTsModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void registerApp(String appid, Promise promise) {
     this.appId = appid;
-    api = WXAPIFactory.createWXAPI(this.getReactApplicationContext().getBaseContext(),appId,false);
+    api = WXAPIFactory.createWXAPI(this.getReactApplicationContext().getBaseContext(),appId, true);
     promise.resolve(api.registerApp(appid));
   }
   public static native boolean nativeRegisterApp(String appId, Promise promise);
