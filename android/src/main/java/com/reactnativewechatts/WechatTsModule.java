@@ -2,14 +2,21 @@ package com.reactnativewechatts;
 
 import androidx.annotation.NonNull;
 
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.module.annotations.ReactModule;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.tencent.mm.opensdk.modelbase.BaseReq;
+import com.tencent.mm.opensdk.modelbase.BaseResp;
 import com.tencent.mm.opensdk.modelmsg.SendAuth;
+import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.opensdk.modelpay.PayReq;
+import com.tencent.mm.opensdk.modelpay.PayResp;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
@@ -420,39 +427,39 @@ public class WechatTsModule extends ReactContextBaseJavaModule {
 //  // TODO: 实现sendRequest、sendSuccessResponse、sendErrorCommonResponse、sendErrorUserCancelResponse
 //
 //
-//  public void onReq(BaseReq baseReq) {
-//
-//  }
-//
-//  public void onResp(BaseResp baseResp) {
-//    WritableMap map = Arguments.createMap();
-//    map.putInt("errCode", baseResp.errCode);
-//    map.putString("errStr", baseResp.errStr);
-//    map.putString("openId", baseResp.openId);
-//    map.putString("transaction", baseResp.transaction);
-//
-//    if (baseResp instanceof SendAuth.Resp) {
-//      SendAuth.Resp resp = (SendAuth.Resp) (baseResp);
-//
-//      map.putString("type", "SendAuth.Resp");
-//      map.putString("code", resp.code);
-//      map.putString("state", resp.state);
-//      map.putString("url", resp.url);
-//      map.putString("lang", resp.lang);
-//      map.putString("country", resp.country);
-//    } else if (baseResp instanceof SendMessageToWX.Resp) {
-//      SendMessageToWX.Resp resp = (SendMessageToWX.Resp) (baseResp);
-//      map.putString("type", "SendMessageToWX.Resp");
-//    } else if (baseResp instanceof PayResp) {
-//      PayResp resp = (PayResp) (baseResp);
-//      map.putString("type", "PayReq.Resp");
-//      map.putString("returnKey", resp.returnKey);
-//    }
-//
-//    this.getReactApplicationContext()
-//      .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-//      .emit("WeChat_Resp", map);
-//  }
+  public void onReq(BaseReq baseReq) {
+
+  }
+
+  public void onResp(BaseResp baseResp) {
+    WritableMap map = Arguments.createMap();
+    map.putInt("errCode", baseResp.errCode);
+    map.putString("errStr", baseResp.errStr);
+    map.putString("openId", baseResp.openId);
+    map.putString("transaction", baseResp.transaction);
+
+    if (baseResp instanceof SendAuth.Resp) {
+      SendAuth.Resp resp = (SendAuth.Resp) (baseResp);
+
+      map.putString("type", "SendAuth.Resp");
+      map.putString("code", resp.code);
+      map.putString("state", resp.state);
+      map.putString("url", resp.url);
+      map.putString("lang", resp.lang);
+      map.putString("country", resp.country);
+    } else if (baseResp instanceof SendMessageToWX.Resp) {
+      SendMessageToWX.Resp resp = (SendMessageToWX.Resp) (baseResp);
+      map.putString("type", "SendMessageToWX.Resp");
+    } else if (baseResp instanceof PayResp) {
+      PayResp resp = (PayResp) (baseResp);
+      map.putString("type", "PayReq.Resp");
+      map.putString("returnKey", resp.returnKey);
+    }
+
+    this.getReactApplicationContext()
+      .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+      .emit("WECHAT_RESP", map);
+  }
 //
 //  private interface ImagePromise {
 //    void invoke(@Nullable Bitmap bitmap);

@@ -1,7 +1,40 @@
 // /* eslint-disable no-proto */
 // ('use strict');
-import { NativeModules } from 'react-native';
+import { NativeModules, DeviceEventEmitter } from 'react-native';
+import { EventEmitter } from 'events';
 const { WechatTs } = NativeModules;
+
+const emitter = new EventEmitter();
+/* 注册监听器 */
+DeviceEventEmitter.addListener('WECHAT_RESP', (resp) => {
+  emitter.emit(resp.type, resp);
+});
+
+export function sendAuthRequest(scopes: string, state: string) {
+  return new Promise(async (resolve, reject) => {
+    await WechatTs.sendAuthRequest(scopes, state);
+    emitter.once('SendAuth.Resp', (resp) => {
+      if (resp.errCode === 0) {
+        resolve(resp);
+      } else {
+        reject(resp);
+      }
+    });
+  });
+}
+export function pay(data: any) {
+  return new Promise((resolve, reject) => {
+    WechatTs.pay(data, () => {
+      emitter.once('PayReq.Resp', (resp) => {
+        if (resp.errCode === 0) {
+          resolve(resp);
+        } else {
+          reject(resp);
+        }
+      });
+    });
+  });
+}
 
 type WechatTsType = {
   multiply(a: number, b: number): Promise<number>;
