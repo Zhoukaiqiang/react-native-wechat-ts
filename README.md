@@ -53,7 +53,10 @@ const Button = () => (
   <Button title="微信登录" onPress={auth} />
 )
 ```
-
+## Notice
+**注意**，微信SDK有几个大坑:
+1. Android 11使用微信的SDK时需要修改`android`目录里的AndroidManifest.xml ，参考[Android 11-第三方应用无法拉起微信适配](https://developers.weixin.qq.com/doc/oplatform/Mobile_App/Access_Guide/Android.html#jump2)
+2. 包签名问题....
 
 ## License
 
